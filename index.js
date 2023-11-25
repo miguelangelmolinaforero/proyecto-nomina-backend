@@ -1,7 +1,10 @@
 const { Connection, Request } = require('tedious');
 const express = require('express');
+const cors = require('cors'); // Importa el paquete cors
 
 const app = express();
+
+app.use(cors()); // Habilita CORS para todas las rutas de tu aplicación
 
 const config = {
     authentication: {
@@ -53,7 +56,7 @@ function darDevengosTotalesPorEmpleado(response) {
             console.error('Error al ejecutar la consulta:', err);
             response?.status(500).send('Error al ejecutar la consulta');
         } else {
-            console.log(`Consulta exitosa. Filas afectadas: ${rowCount}`);
+            // console.log(`Consulta exitosa. Filas afectadas: ${rowCount}`);
             response?.status(200).json(result); // Enviar el array como respuesta en formato JSON
         }
     });
@@ -78,7 +81,9 @@ function darDevengosTotalesPorEmpleado(response) {
  * Api descuentosTotalesPorEmpleado
  */
 app.get('/descuentosTotalesPorEmpleado', (req, res) => {
-    darDescuentosTotalesPorEmpleado(res);
+    setTimeout(() => {
+        darDescuentosTotalesPorEmpleado(res);
+    }, 100);
 });
 
 /**
@@ -93,7 +98,7 @@ function darDescuentosTotalesPorEmpleado(response) {
             console.error('Error al ejecutar la consulta:', err);
             response?.status(500).send('Error al ejecutar la consulta');
         } else {
-            console.log(`Consulta exitosa. Filas afectadas: ${rowCount}`);
+            // console.log(`Consulta exitosa. Filas afectadas: ${rowCount}`);
             response?.status(200).json(result); // Enviar el array como respuesta en formato JSON
         }
     });
@@ -112,7 +117,6 @@ function darDescuentosTotalesPorEmpleado(response) {
 
     connection.execSql(request);
 }
-
 
 
 /**
@@ -134,7 +138,7 @@ function obtenerInformacionCompletaEmpleados(response) {
             console.error('Error al ejecutar la consulta:', err);
             response?.status(500).send('Error al ejecutar la consulta');
         } else {
-            console.log(`Consulta exitosa. Filas afectadas: ${rowCount}`);
+            // console.log(`Consulta exitosa. Filas afectadas: ${rowCount}`);
             response?.status(200).json(result); // Enviar el array como respuesta en formato JSON
         }
     });
@@ -154,5 +158,161 @@ function obtenerInformacionCompletaEmpleados(response) {
     connection.execSql(request);
 }
 
+
+/**
+ * Api InformacionDevengadosEmpleados
+ */
+app.get('/informacionDevengadosEmpleados', (req, res) => {
+    obtenerInformacionDevengadosEmpleados(res);
+});
+
+/**
+ * Información completa de empleados
+ * @param {*} response 
+ */
+function obtenerInformacionDevengadosEmpleados(response) {
+    const result = []; // Array para almacenar los objetos de cada fila
+
+    const request = new Request('EXEC InformacionDevengadosEmpleados', (err, rowCount) => {
+        if (err) {
+            console.error('Error al ejecutar la consulta:', err);
+            response?.status(500).send('Error al ejecutar la consulta');
+        } else {
+            // console.log(`Consulta exitosa. Filas afectadas: ${rowCount}`);
+            response?.status(200).json(result); // Enviar el array como respuesta en formato JSON
+        }
+    });
+
+    request.on('row', (columns) => {
+        const rowObject = {}; // Objeto para almacenar los datos de cada fila
+        columns.forEach((column) => {
+            rowObject[column.metadata.colName] = column.value; // Agregar valor al objeto usando el nombre de la columna como clave
+        });
+        result.push(rowObject); // Agregar el objeto al array de resultados
+    });
+
+    request.on('done', (rowCount) => {
+        console.log('Todas las filas han sido recibidas.');
+    });
+
+    connection.execSql(request);
+}
+
+
+/**
+ * Api InformacionDescuentosEmpleados
+ */
+app.get('/informacionDescuentosEmpleados', (req, res) => {
+    obtenerInformacionDescuentosEmpleados(res);
+});
+
+/**
+ * Información completa de empleados
+ * @param {*} response 
+ */
+function obtenerInformacionDescuentosEmpleados(response) {
+    const result = []; // Array para almacenar los objetos de cada fila
+
+    const request = new Request('EXEC InformacionDescuentosEmpleados', (err, rowCount) => {
+        if (err) {
+            console.error('Error al ejecutar la consulta:', err);
+            response?.status(500).send('Error al ejecutar la consulta');
+        } else {
+            // console.log(`Consulta exitosa. Filas afectadas: ${rowCount}`);
+            response?.status(200).json(result); // Enviar el array como respuesta en formato JSON
+        }
+    });
+
+    request.on('row', (columns) => {
+        const rowObject = {}; // Objeto para almacenar los datos de cada fila
+        columns.forEach((column) => {
+            rowObject[column.metadata.colName] = column.value; // Agregar valor al objeto usando el nombre de la columna como clave
+        });
+        result.push(rowObject); // Agregar el objeto al array de resultados
+    });
+
+    request.on('done', (rowCount) => {
+        console.log('Todas las filas han sido recibidas.');
+    });
+
+    connection.execSql(request);
+}
+
+
+/**
+ * Api sueldos
+ */
+app.get('/mostrarMayoresSueldos', (req, res) => {
+    setTimeout(() => {
+        MostrarMayoresSueldos(res);
+    }, 150);
+});
+
+function MostrarMayoresSueldos(response) {
+    const result = []; // Array para almacenar los objetos de cada fila
+
+    const request = new Request('EXEC MostrarMayoresSueldos', (err, rowCount) => {
+        if (err) {
+            console.error('Error al ejecutar la consulta:', err);
+            response?.status(500).send('Error al ejecutar la consulta');
+        } else {
+            // console.log(`Consulta exitosa. Filas afectadas: ${rowCount}`);
+            response?.status(200).json(result); // Enviar el array como respuesta en formato JSON
+        }
+    });
+
+    request.on('row', (columns) => {
+        const rowObject = {}; // Objeto para almacenar los datos de cada fila
+        columns.forEach((column) => {
+            rowObject[column.metadata.colName] = column.value; // Agregar valor al objeto usando el nombre de la columna como clave
+        });
+        result.push(rowObject); // Agregar el objeto al array de resultados
+    });
+
+    request.on('done', (rowCount) => {
+        console.log('Todas las filas han sido recibidas.');
+    });
+
+    connection.execSql(request);
+}
+
+
+
+/**
+ * Api primas
+ */
+app.get('/mostrarPrimasOrdenadas', (req, res) => {
+    setTimeout(() => {
+        MostrarPrimasOrdenadas(res);
+    }, 200);
+});
+
+function MostrarPrimasOrdenadas(response) {
+    const result = []; // Array para almacenar los objetos de cada fila
+
+    const request = new Request('EXEC MostrarPrimasOrdenadas', (err, rowCount) => {
+        if (err) {
+            console.error('Error al ejecutar la consulta:', err);
+            response?.status(500).send('Error al ejecutar la consulta');
+        } else {
+            // console.log(`Consulta exitosa. Filas afectadas: ${rowCount}`);
+            response?.status(200).json(result); // Enviar el array como respuesta en formato JSON
+        }
+    });
+
+    request.on('row', (columns) => {
+        const rowObject = {}; // Objeto para almacenar los datos de cada fila
+        columns.forEach((column) => {
+            rowObject[column.metadata.colName] = column.value; // Agregar valor al objeto usando el nombre de la columna como clave
+        });
+        result.push(rowObject); // Agregar el objeto al array de resultados
+    });
+
+    request.on('done', (rowCount) => {
+        console.log('Todas las filas han sido recibidas.');
+    });
+
+    connection.execSql(request);
+}
 
 connection.connect();
