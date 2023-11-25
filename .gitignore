@@ -1,0 +1,5 @@
+# Ignorar archivos con extensión .log
+*.log
+
+# Ignorar el directorio llamado "node_modules"
+/node_modules/
